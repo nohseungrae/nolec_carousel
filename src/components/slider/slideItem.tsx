@@ -51,15 +51,12 @@ const StoryItem = styled.div<ISlideItemStyleProps>`
   background-size: auto 100%;
   width: 100%;
   height: 100%;
-  float: left;
-  position: absolute;
+  left: 0;
   background: ${(props) => props.bgColor};
   color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 997;
   animation: ${Open} 0.3s ease-in-out;
+  flex: 1 0 100%;
 
   & .story_img {
     width: 100%;
@@ -140,7 +137,11 @@ const A = styled.a<ISlideItemStyleProps>`
 
 export const SlideItem = (props: any) => {
   return (
-    <StoryItem bgColor={props.color}>
+    <StoryItem
+      className={"slide_item"}
+      data-position={parseInt(props.index) + 1}
+      bgColor={props.color}
+    >
       <input
         onChange={props.onChange}
         value={props.value}

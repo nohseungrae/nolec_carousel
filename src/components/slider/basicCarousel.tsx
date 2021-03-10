@@ -82,7 +82,7 @@ export const BasicCarousel: React.FC<IBasicCarouselProps> = ({
     setState({
       ...state,
       displayState: "block",
-      index: parsedIndex,
+      index: parsedIndex + 1,
     });
   };
 
