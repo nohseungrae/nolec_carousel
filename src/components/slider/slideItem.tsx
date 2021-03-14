@@ -138,7 +138,7 @@ const A = styled.a<ISlideItemStyleProps>`
 export const SlideItem = (props: any) => {
   return (
     <StoryItem
-      className={"slide_item"}
+      className={"slide_item handle"}
       data-position={parseInt(props.index) + 1}
       bgColor={props.color}
     >

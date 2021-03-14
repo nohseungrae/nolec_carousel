@@ -8,6 +8,7 @@ import React, {
 import { Close } from "./close";
 import styled from "styled-components";
 import { SlideItem } from "./slideItem";
+import Draggable from "react-draggable";
 
 const StoryHeart = styled.div`
   cursor: pointer;
@@ -97,52 +98,39 @@ export const Popup: React.FC<IPopupProps> = ({
     }, 50);
     setTimeout(() => cloneIcon.parentNode.removeChild(cloneIcon), 600);
   };
-
+  // 슬라이드 함수 시작
   const slideBox = useRef<HTMLDivElement>(null);
 
-  let currentIndex = state.index;
+  let currentIndex = state.index - 1;
   useEffect(() => {
     const autoCarousel = () => {
       const { current } = slideBox;
       const slideItems = document.querySelectorAll(".slide_item");
       const slideItemsLength = slideItems.length;
-      let front = [];
-      let back = [];
-      let frontIndex = 1;
-      let backIndex = slideItemsLength;
-      for (let index = 0; index <= slideItemsLength - currentIndex; index++) {
-        if (frontIndex < slideItemsLength) {
-          front.push(frontIndex);
-          frontIndex++;
-        }
-      }
-      for (let index = 0; index < currentIndex - 1; index++) {
-        back.push(backIndex);
-        backIndex--;
-      }
-      const orderList = back.sort().concat(front);
 
-      slideItems.forEach((element: any, i: number) => {
-        if (currentIndex === 1) {
-          // console.log(slideItems.item(slideItemsLength - 1));
-          element.style.order = i + 1;
-        } else {
-          // console.log(slideItems.item(currentIndex - 2));
-          element.style.order = orderList[i];
+      let rightIndex = 2;
+      let leftIndex = slideItemsLength;
+      const lengthArray = new Array(slideItemsLength).fill(0);
+      const firstSetArray = lengthArray.map((item, i) => {
+        if (rightIndex !== slideItemsLength + 1 && i >= currentIndex) {
+          item = rightIndex;
+          rightIndex++;
         }
-        // if (parseInt(element.dataset.position) === currentIndex) {
-        //   return (element.style.order = 1);
-        // } else if (currentIndex - parseInt(element.dataset.position) === 1) {
-        //   return (element.style.order = currentIndex);
-        // } else if (parseInt(element.dataset.position) < currentIndex) {
-        //   if (i === 0) {
-        //     return (element.style.order =
-        //       parseInt(element.dataset.position) + i + 1);
-        //   }
-        //   return (element.style.order = parseInt(element.dataset.position) + i);
-        // } else if (parseInt(element.dataset.position) > currentIndex) {
-        //   return (element.style.order = parseInt(element.dataset.position) - i);
-        // }
+        return item;
+      });
+      const lastSetArray = firstSetArray.map((item, i) => {
+        if (item === 0 && (currentIndex - 1 < 0 || currentIndex - 1 === i)) {
+          item = 1;
+        }
+        if (item === 0) {
+          item = leftIndex;
+          leftIndex--;
+        }
+        return item;
+      });
+      slideItems.forEach((element: any, i: number) => {
+        // console.log(slideItems.item(currentIndex - 2));
+        element.style.order = lastSetArray[i];
       });
 
       if (current) {
@@ -153,21 +141,26 @@ export const Popup: React.FC<IPopupProps> = ({
 
         current.addEventListener("transitionend", () => {
           if (current.classList.contains("slide_transition_next")) {
-            if (currentIndex === slideItemsLength) {
-              currentIndex = 1;
+            if (currentIndex === slideItemsLength - 1) {
+              currentIndex = 0;
             } else {
               currentIndex++;
             }
-            let order = 1;
+            let order = 2;
             console.log("여기 되냐", currentIndex);
             // change order from current position till last
             for (let i = currentIndex; i <= slideItemsLength; i++) {
               current.childNodes.forEach((node: any) => {
                 if (node.dataset.position === i.toString()) {
-                  node.style.order = order;
+                  if (node.dataset.position === slideItemsLength) {
+                    node.style.order = 1;
+                  } else {
+                    node.style.order = order;
+                  }
                 }
               });
               order++;
+              console.log(order);
             }
             for (let i = 1; i < currentIndex; i++) {
               current.childNodes.forEach((node: any) => {
@@ -183,8 +176,9 @@ export const Popup: React.FC<IPopupProps> = ({
             if (currentIndex === slideItemsLength) {
               currentIndex = 1;
             } else {
-              currentIndex++;
+              currentIndex--;
             }
+            console.log(currentIndex);
             let order = 1;
             for (let i = currentIndex; i <= slideItemsLength; i++) {
               current.childNodes.forEach((node: any) => {
@@ -247,10 +241,21 @@ export const Popup: React.FC<IPopupProps> = ({
           </div>
         </StoryHeart>
       ))}
+      {/* <Draggable
+        axis="x"
+        defaultPosition={{ x: 0, y: 0 }}
+        scale={1}
+        bounds={{ left: window.screenLeft, right: 0 }}
+        handle=".handle"
+        grid={[25, 25]}
+      > */}
       <SlideBox
         ref={slideBox}
         className={"slide_box flex h-full absolute w-full left-0 top-0"}
-        style={{ backgroundColor: "#000000db" }}
+        style={{
+          backgroundColor: "#000000db",
+          left: "-100%",
+        }}
       >
         {state?.groupedSlides?.map((slide: any, i: number) => (
           <>
@@ -282,6 +287,7 @@ export const Popup: React.FC<IPopupProps> = ({
         <NextArrow onClick={next} />
         <PrevArrow onClick={prev} />
       </SlideBox>
+      {/* </Draggable> */}
     </div>
   );
 };
@@ -298,7 +304,7 @@ const NextArrow = (props: any) => {
         position: "absolute",
         justifyContent: "center",
         alignItems: "center",
-        right: 0,
+        right: "-100%",
         top: "10%",
         width: "120px",
         height: "80%",
@@ -322,7 +328,7 @@ const PrevArrow = (props: any) => {
         position: "absolute",
         justifyContent: "center",
         alignItems: "center",
-        left: 0,
+        left: "100%",
         top: "10%",
         width: "120px",
         height: "80%",
