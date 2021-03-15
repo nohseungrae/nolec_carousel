@@ -1,7 +1,7 @@
-import React from 'react';
-import styled, { keyframes } from 'styled-components';
-import { checkVideoImg } from './basicCarousel';
-import { ProgressBar } from './progress';
+import React from "react";
+import styled, { keyframes } from "styled-components";
+import { checkVideoImg } from "./basicCarousel";
+import { ProgressBar } from "./progress";
 
 const Open = keyframes`
   0% {
@@ -44,135 +44,148 @@ const Links = keyframes`
 `;
 
 interface ISlideItemStyleProps {
-    bgColor?: any;
-    displayurl?: any;
+  bgColor?: any;
+  displayurl?: any;
 }
 
 const StoryItem = styled.div<ISlideItemStyleProps>`
-    position: relative;
-    background-size: auto 100%;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    background: ${(props) => props.bgColor};
-    color: white;
-    z-index: 997;
-    animation: ${Open} 0.3s ease-in-out;
-    display: flex;
-    align-items: center;
-    flex: 1 0 100%;
+  position: relative;
+  background-size: auto 100%;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  background: ${(props) => props.bgColor};
+  color: white;
+  z-index: 997;
+  animation: ${Open} 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  flex: 1 0 100%;
 
-    & .story_img {
-        width: 100%;
-        background-size: 100% auto;
-        background-repeat: no-repeat;
-        background-position: center;
-        & img {
-            width: 100%;
-        }
-        .overlay {
-            position: absolute;
-            top: 0;
-            height: 100%;
-            width: 100%;
-            z-index: 997;
-            background: url(${process.env.REACT_APP_BACKEND_HOST + 'static/m/images/story_overlay.png'}) repeat-x;
-            background-size: auto 100%;
-        }
+  & .story_img {
+    width: 100%;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: center;
+    & img {
+      width: 100%;
     }
+    .overlay {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      z-index: 997;
+      background: url(${process.env.REACT_APP_BACKEND_HOST +
+        "static/m/images/story_overlay.png"})
+        repeat-x;
+      background-size: auto 100%;
+    }
+  }
 `;
 const StoryFooter = styled.div`
-    position: absolute;
-    bottom: 10px;
-    width: 100%;
-    z-index: 999;
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  z-index: 999;
 `;
 
 const StoryTitle = styled.div`
-    display: flex;
-    flex-flow: column wrap;
-    margin-bottom: 10px;
-    padding: 0 15px;
+  display: flex;
+  flex-flow: column wrap;
+  margin-bottom: 10px;
+  padding: 0 15px;
+  color: #fff;
+  transition: margin-bottom, opacity 0.5s linear;
+  &.animation {
+    animation: ${Title} 0.7s linear;
+  }
+  > h2 {
     color: #fff;
-    transition: margin-bottom, opacity 0.5s linear;
-    &.animation {
-        animation: ${Title} 0.7s linear;
-    }
-    > h2 {
-        color: #fff;
-        font-size: 1.8em;
-    }
-    > span {
-        margin: 5px 0;
-        color: #ececec;
-        font-size: 1em;
-    }
+    font-size: 1.8em;
+  }
+  > span {
+    margin: 5px 0;
+    color: #ececec;
+    font-size: 1em;
+  }
 `;
 
 const StoryLink = styled.div`
-    transition: margin-bottom, opacity 0.5s ease-out;
-    height: 80px;
-    &.animation {
-        animation: ${Links} 0.5s ease-out;
-    }
+  transition: margin-bottom, opacity 0.5s ease-out;
+  height: 80px;
+  &.animation {
+    animation: ${Links} 0.5s ease-out;
+  }
 `;
 
 const A = styled.a<ISlideItemStyleProps>`
-    display: ${(props) => props.displayurl ?? 'flex'};
-    align-items: center;
-    flex-flow: column wrap;
+  display: ${(props) => props.displayurl ?? "flex"};
+  align-items: center;
+  flex-flow: column wrap;
+  text-decoration: none;
+  > span {
+    padding: 5px 25px;
+    border-radius: 0.3em;
+    margin: 0 auto;
+    color: white;
     text-decoration: none;
-    > span {
-        padding: 5px 25px;
-        border-radius: 0.3em;
-        margin: 0 auto;
-        color: white;
-        text-decoration: none;
-        border: 1px solid white;
-    }
-    > img {
-        width: 45px;
-        height: 45px;
-        padding: 7px;
-    }
+    border: 1px solid white;
+  }
+  > img {
+    width: 45px;
+    height: 45px;
+    padding: 7px;
+  }
 `;
 export declare interface ISlideItemProps {
-    display: string;
-    duration: number;
-    delay: number;
-    index: number;
-    color: string;
-    alt: string;
-    value: number;
-    src: string;
-    href: string;
-    main_copy: string;
-    sub_copy: string;
-    ani: string;
-    displayurl: string;
-    slide: any;
+  display: string;
+  duration: number;
+  delay: number;
+  index: number;
+  color: string;
+  alt: string;
+  value: number;
+  src: string;
+  href: string;
+  main_copy: string;
+  sub_copy: string;
+  ani: string;
+  displayurl: string;
+  slide: any;
 }
 
 export const SlideItem: React.FC<ISlideItemProps> = (props: any) => {
-    return (
-        <StoryItem className={'slide_item handle'} data-position={parseInt(props.index) + 1} bgColor={props.color}>
-            <ProgressBar delay={props.delay} display={props.display} duration={props.duration} />
-            <StoryFooter>
-                <StoryTitle className={props.ani}>
-                    <h2>{props.main_copy}</h2>
-                    <span>{props.sub_copy}</span>
-                </StoryTitle>
-                <StoryLink className={props.ani}>
-                    <A href={props.href} displayurl={props.displayurl}>
-                        <img src={`/static/icons/ico_circle_arrow_up.png`} alt="화살표아이콘" />
-                        <span>자세히보기</span>
-                    </A>
-                </StoryLink>
-            </StoryFooter>
-            <div className="story_img">
-                <div className="overlay" />
-                {checkVideoImg(props.src, props.slide, undefined)}
-            </div>
-        </StoryItem>
-    );
+  return (
+    <StoryItem
+      className={"slide_item handle"}
+      data-position={parseInt(props.index) + 1}
+      bgColor={props.color}
+    >
+      <ProgressBar
+        delay={props.delay}
+        display={props.display}
+        duration={props.duration}
+      />
+      <StoryFooter>
+        <StoryTitle className={props.ani}>
+          <h2>{props.main_copy}</h2>
+          <span>{props.sub_copy}</span>
+        </StoryTitle>
+        <StoryLink className={props.ani}>
+          <A href={props.href} displayurl={props.displayurl}>
+            <img
+              src={`/static/icons/ico_circle_arrow_up.png`}
+              alt="화살표아이콘"
+            />
+            <span>자세히보기</span>
+          </A>
+        </StoryLink>
+      </StoryFooter>
+      <div className="story_img">
+        <div className="overlay" />
+        {checkVideoImg(props.src, props.slide, undefined)}
+      </div>
+    </StoryItem>
+  );
 };
